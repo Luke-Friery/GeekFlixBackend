@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CleanArchiTemplate.Application.Common.Mappings;
-using CleanArchiTemplate.Application.TodoLists.Queries.GetTodos;
+//using CleanArchiTemplate.Application.TodoLists.Queries.GetTodos;
 using CleanArchiTemplate.Domain.Entities;
 using NUnit.Framework;
 using System;
@@ -28,14 +28,14 @@ namespace CleanArchiTemplate.Application.UnitTests.Common.Mappings
             _configuration.AssertConfigurationIsValid();
         }
         
-        [Test]
-        [TestCase(typeof(TodoList), typeof(TodoListDto))]
-        [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
-        public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
-        {
-            var instance = Activator.CreateInstance(source);
+        // [Test]
+        // [TestCase(typeof(TodoList), typeof(TodoListDto))]
+        // [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
+        // public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
+        // {
+        //     var instance = Activator.CreateInstance(source);
 
-            _mapper.Map(instance, source, destination);
-        }
+        //     _mapper.Map(instance, source, destination);
+        // }
     }
 }

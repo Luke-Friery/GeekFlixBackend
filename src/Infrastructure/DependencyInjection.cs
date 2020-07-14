@@ -1,5 +1,5 @@
 ﻿using CleanArchiTemplate.Application.Common.Interfaces;
-using CleanArchiTemplate.Infrastructure.Files;
+//using CleanArchiTemplate.Infrastructure.Files;
 using CleanArchiTemplate.Infrastructure.Identity;
 using CleanArchiTemplate.Infrastructure.Persistence;
 using CleanArchiTemplate.Infrastructure.Services;
@@ -28,15 +28,8 @@ namespace CleanArchiTemplate.Infrastructure
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
 
-            // var connectionString = configuration["PostgreSql:ConnectionString"];
-            // var dbPassword = configuration["PostgreSql:DbPassword"];
-          
-            // var builder = new NpgsqlConnectionStringBuilder(connectionString)
-            // {
-            //   Password = dbPassword
-            // };
-          
-            // services.AddDbContext<MovieDbContext>(options => options.UseNpgsql(builder.ConnectionString));
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            //   options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
 
 
@@ -56,7 +49,7 @@ namespace CleanArchiTemplate.Infrastructure
 
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
-            services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+            //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
