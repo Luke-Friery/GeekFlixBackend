@@ -12,6 +12,6 @@ namespace CleanArchiTemplate.Domain.Entities
     public string Emotion { get; set; }
     public int Rating { get; set; }
   
-
+  //public string PhotoUrl?
   }
 }

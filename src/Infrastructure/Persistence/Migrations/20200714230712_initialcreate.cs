@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace CleanArchiTemplate.Infrastructure.Migrations
+namespace CleanArchiTemplate.Infrastructure.Persistence.Migrations
 {
-    public partial class InitialCreate2 : Migration
+    public partial class initialcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
