@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace CleanArchiTemplate.Infrastructure
 {
@@ -26,6 +27,24 @@ namespace CleanArchiTemplate.Infrastructure
                         configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
+
+            // var connectionString = configuration["PostgreSql:ConnectionString"];
+            // var dbPassword = configuration["PostgreSql:DbPassword"];
+          
+            // var builder = new NpgsqlConnectionStringBuilder(connectionString)
+            // {
+            //   Password = dbPassword
+            // };
+          
+            // services.AddDbContext<MovieDbContext>(options => options.UseNpgsql(builder.ConnectionString));
+
+
+
+
+
+
+
+
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
