@@ -1,8 +1,6 @@
-using CleanArchiTemplate.Domain.Common;
-
-namespace CleanArchiTemplate.Domain.Entities
+namespace Application.MovieList.Queries.GetMovies
 {
-  public class Movie : AuditableEntity
+  public class MovieDetailsDto
   {
     public int Id { get; set; }
     public string Title { get; set; }
