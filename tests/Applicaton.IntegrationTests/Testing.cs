@@ -63,17 +63,17 @@ public class Testing
             TablesToIgnore = new [] { "__EFMigrationsHistory" }
         };
 
-        EnsureDatabase();
+        //EnsureDatabase();
     }
 
-    private static void EnsureDatabase()
-    {
-        using var scope = _scopeFactory.CreateScope();
+    // private static void EnsureDatabase()
+    // {
+    //     using var scope = _scopeFactory.CreateScope();
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+    //     var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-        context.Database.Migrate();
-    }
+    //     context.Database.Migrate();
+    // }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
     {

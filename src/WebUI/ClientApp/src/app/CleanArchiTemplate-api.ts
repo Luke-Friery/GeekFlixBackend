@@ -134,6 +134,195 @@ export class MoviesClient implements IMoviesClient {
     }
 }
 
+export interface ITMDbApiInfoClient {
+    getListPageNum(movieId: number | undefined): Observable<string>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class TMDbApiInfoClient implements ITMDbApiInfoClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getListPageNum(movieId: number | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/TMDbApiInfo/movieId?";
+        if (movieId === null)
+            throw new Error("The parameter 'movieId' cannot be null.");
+        else if (movieId !== undefined)
+            url_ += "movieId=" + encodeURIComponent("" + movieId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListPageNum(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListPageNum(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetListPageNum(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+export interface ITMDbApiListClient {
+    getListPage1(): Observable<MovieList>;
+    getListPageNum(page: number | undefined): Observable<MovieList>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class TMDbApiListClient implements ITMDbApiListClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getListPage1(): Observable<MovieList> {
+        let url_ = this.baseUrl + "/api/TMDbApiList";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListPage1(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListPage1(<any>response_);
+                } catch (e) {
+                    return <Observable<MovieList>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MovieList>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetListPage1(response: HttpResponseBase): Observable<MovieList> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MovieList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MovieList>(<any>null);
+    }
+
+    getListPageNum(page: number | undefined): Observable<MovieList> {
+        let url_ = this.baseUrl + "/api/TMDbApiList/page?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListPageNum(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListPageNum(<any>response_);
+                } catch (e) {
+                    return <Observable<MovieList>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MovieList>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetListPageNum(response: HttpResponseBase): Observable<MovieList> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MovieList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MovieList>(<any>null);
+    }
+}
+
 export interface IWeatherForecastClient {
     get(): Observable<WeatherForecast[]>;
 }
@@ -250,6 +439,158 @@ export interface IAddMovieCommand {
     url?: string | undefined;
     photoUrl?: string | undefined;
     releasedYear?: number;
+}
+
+export class MovieList implements IMovieList {
+    page?: number;
+    total_results?: number;
+    total_pages?: number;
+    results?: Result[] | undefined;
+
+    constructor(data?: IMovieList) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.page = _data["page"];
+            this.total_results = _data["total_results"];
+            this.total_pages = _data["total_pages"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(Result.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): MovieList {
+        data = typeof data === 'object' ? data : {};
+        let result = new MovieList();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["page"] = this.page;
+        data["total_results"] = this.total_results;
+        data["total_pages"] = this.total_pages;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IMovieList {
+    page?: number;
+    total_results?: number;
+    total_pages?: number;
+    results?: Result[] | undefined;
+}
+
+export class Result implements IResult {
+    popularity?: number;
+    vote_count?: number;
+    video?: boolean;
+    poster_path?: string | undefined;
+    id?: number;
+    adult?: boolean;
+    backdrop_path?: string | undefined;
+    original_language?: string | undefined;
+    original_title?: string | undefined;
+    genre_ids?: number[] | undefined;
+    title?: string | undefined;
+    vote_average?: number;
+    overview?: string | undefined;
+    release_date?: string | undefined;
+
+    constructor(data?: IResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.popularity = _data["popularity"];
+            this.vote_count = _data["vote_count"];
+            this.video = _data["video"];
+            this.poster_path = _data["poster_path"];
+            this.id = _data["id"];
+            this.adult = _data["adult"];
+            this.backdrop_path = _data["backdrop_path"];
+            this.original_language = _data["original_language"];
+            this.original_title = _data["original_title"];
+            if (Array.isArray(_data["genre_ids"])) {
+                this.genre_ids = [] as any;
+                for (let item of _data["genre_ids"])
+                    this.genre_ids!.push(item);
+            }
+            this.title = _data["title"];
+            this.vote_average = _data["vote_average"];
+            this.overview = _data["overview"];
+            this.release_date = _data["release_date"];
+        }
+    }
+
+    static fromJS(data: any): Result {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["popularity"] = this.popularity;
+        data["vote_count"] = this.vote_count;
+        data["video"] = this.video;
+        data["poster_path"] = this.poster_path;
+        data["id"] = this.id;
+        data["adult"] = this.adult;
+        data["backdrop_path"] = this.backdrop_path;
+        data["original_language"] = this.original_language;
+        data["original_title"] = this.original_title;
+        if (Array.isArray(this.genre_ids)) {
+            data["genre_ids"] = [];
+            for (let item of this.genre_ids)
+                data["genre_ids"].push(item);
+        }
+        data["title"] = this.title;
+        data["vote_average"] = this.vote_average;
+        data["overview"] = this.overview;
+        data["release_date"] = this.release_date;
+        return data; 
+    }
+}
+
+export interface IResult {
+    popularity?: number;
+    vote_count?: number;
+    video?: boolean;
+    poster_path?: string | undefined;
+    id?: number;
+    adult?: boolean;
+    backdrop_path?: string | undefined;
+    original_language?: string | undefined;
+    original_title?: string | undefined;
+    genre_ids?: number[] | undefined;
+    title?: string | undefined;
+    vote_average?: number;
+    overview?: string | undefined;
+    release_date?: string | undefined;
 }
 
 export class WeatherForecast implements IWeatherForecast {

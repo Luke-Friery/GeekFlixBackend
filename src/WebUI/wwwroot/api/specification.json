@@ -72,6 +72,88 @@
         }
       }
     },
+    "/api/TMDbApiInfo/movieId": {
+      "get": {
+        "tags": [
+          "TMDbApiInfo"
+        ],
+        "operationId": "TMDbApiInfo_GetListPageNum",
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TMDbApiList": {
+      "get": {
+        "tags": [
+          "TMDbApiList"
+        ],
+        "operationId": "TMDbApiList_GetListPage1",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TMDbApiList/page": {
+      "get": {
+        "tags": [
+          "TMDbApiList"
+        ],
+        "operationId": "TMDbApiList_GetListPageNum",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/WeatherForecast": {
       "get": {
         "tags": [
@@ -117,6 +199,95 @@
           "releasedYear": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "MovieList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_results": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Result"
+            }
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "popularity": {
+            "type": "number",
+            "format": "double"
+          },
+          "vote_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "video": {
+            "type": "boolean"
+          },
+          "poster_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adult": {
+            "type": "boolean"
+          },
+          "backdrop_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "original_language": {
+            "type": "string",
+            "nullable": true
+          },
+          "original_title": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "vote_average": {
+            "type": "number",
+            "format": "double"
+          },
+          "overview": {
+            "type": "string",
+            "nullable": true
+          },
+          "release_date": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

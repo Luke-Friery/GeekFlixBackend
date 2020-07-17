@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using CleanArchiTemplate.Domain.Common;
 
 namespace CleanArchiTemplate.Domain.Entities

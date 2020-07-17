@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchiTemplate.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200715043806_PhotourlandReleasedyear")]
-    partial class PhotourlandReleasedyear
+    [Migration("20200716040342_obsoletecreate")]
+    partial class obsoletecreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
