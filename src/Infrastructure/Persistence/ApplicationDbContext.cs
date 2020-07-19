@@ -2,6 +2,7 @@
 using CleanArchiTemplate.Domain.Common;
 using CleanArchiTemplate.Domain.Entities;
 using CleanArchiTemplate.Infrastructure.Identity;
+using Domain.Entities;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,10 @@ namespace CleanArchiTemplate.Infrastructure.Persistence
 
 
 
-    public DbSet<Movie> Movies { get; set; }
+    public DbSet<Movie> Movies { get; set; } //needs to be in cache
+    //public DbSet<PopularityData> PopData { get; set; } //needs to be in cache
 
-
+    //public DbSet<AnalyticData> Analytics { get; set; } //needs to be in db
 
 
 

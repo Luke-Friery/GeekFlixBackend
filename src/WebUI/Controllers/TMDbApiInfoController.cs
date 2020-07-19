@@ -8,7 +8,7 @@ namespace WebUI.Controllers
 {
   public class TMDbApiInfoController : ApiController
   {
-    [HttpGet("movieId")]
+    [HttpGet("{movieId}")]
     public MovieInfo GetListPageNum(int movieId)
     {
     //if cache exists
