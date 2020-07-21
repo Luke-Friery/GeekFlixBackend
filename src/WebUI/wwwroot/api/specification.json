@@ -6,72 +6,6 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Movies": {
-      "post": {
-        "tags": [
-          "Movies"
-        ],
-        "operationId": "Movies_Create",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddMovieCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Movies/{id}": {
-      "delete": {
-        "tags": [
-          "Movies"
-        ],
-        "operationId": "Movies_Delete",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/TMDbApiInfo/{movieId}": {
       "get": {
         "tags": [
@@ -163,28 +97,6 @@
   },
   "components": {
     "schemas": {
-      "AddMovieCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "photoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "releasedYear": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "WeatherForecast": {
         "type": "object",
         "additionalProperties": false,

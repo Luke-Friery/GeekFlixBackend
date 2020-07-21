@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CleanArchiTemplate.Infrastructure.Persistence.Migrations
 {
-    public partial class obsoletecreate : Migration
+    public partial class blankmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,30 +62,6 @@ namespace CleanArchiTemplate.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Movies",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedBy = table.Column<string>(nullable: true),
-                    Created = table.Column<DateTime>(nullable: false),
-                    LastModifiedBy = table.Column<string>(nullable: true),
-                    LastModified = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: true),
-                    Popularity = table.Column<int>(nullable: false),
-                    Emotion = table.Column<string>(nullable: true),
-                    Rating = table.Column<int>(nullable: false),
-                    PhotoUrl = table.Column<string>(nullable: true),
-                    ReleasedYear = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Movies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -340,9 +316,6 @@ namespace CleanArchiTemplate.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "DeviceCodes");
-
-            migrationBuilder.DropTable(
-                name: "Movies");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
