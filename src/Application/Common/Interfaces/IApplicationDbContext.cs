@@ -7,7 +7,6 @@ namespace CleanArchiTemplate.Application.Common.Interfaces
 {
   public interface IApplicationDbContext
   {
-    DbSet<Movie> Movies { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
   }
 }

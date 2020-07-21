@@ -9,7 +9,7 @@ namespace WebUI.Controllers
   public class TMDbApiInfoController : ApiController
   {
     [HttpGet("{movieId}")]
-    public MovieInfo GetListPageNum(int movieId)
+    public string GetListPageNum(int movieId)
     {
     //if cache exists
       //use cached data
@@ -23,8 +23,8 @@ namespace WebUI.Controllers
       //insert functions to alter movieListings here (e.g. add emotions)
       //add data to cache?
 
-
-      return movieInfo;
+      string SerialData = Newtonsoft.Json.JsonConvert.SerializeObject(movieInfo);
+      return SerialData;
     }
 
 

@@ -135,7 +135,7 @@ export class MoviesClient implements IMoviesClient {
 }
 
 export interface ITMDbApiInfoClient {
-    getListPageNum(movieId: number): Observable<MovieInfo>;
+    getListPageNum(movieId: number): Observable<string>;
 }
 
 @Injectable({
@@ -151,7 +151,7 @@ export class TMDbApiInfoClient implements ITMDbApiInfoClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getListPageNum(movieId: number): Observable<MovieInfo> {
+    getListPageNum(movieId: number): Observable<string> {
         let url_ = this.baseUrl + "/api/TMDbApiInfo/{movieId}";
         if (movieId === undefined || movieId === null)
             throw new Error("The parameter 'movieId' must be defined.");
@@ -173,14 +173,14 @@ export class TMDbApiInfoClient implements ITMDbApiInfoClient {
                 try {
                     return this.processGetListPageNum(<any>response_);
                 } catch (e) {
-                    return <Observable<MovieInfo>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<MovieInfo>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetListPageNum(response: HttpResponseBase): Observable<MovieInfo> {
+    protected processGetListPageNum(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -191,7 +191,7 @@ export class TMDbApiInfoClient implements ITMDbApiInfoClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = MovieInfo.fromJS(resultData200);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -199,12 +199,12 @@ export class TMDbApiInfoClient implements ITMDbApiInfoClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<MovieInfo>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 }
 
 export interface ITMDbApiListClient {
-    getListPageNum(page: number): Observable<MovieList>;
+    getListPageNum(page: number): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -220,7 +220,7 @@ export class TMDbApiListClient implements ITMDbApiListClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getListPageNum(page: number): Observable<MovieList> {
+    getListPageNum(page: number): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/TMDbApiList/{page}";
         if (page === undefined || page === null)
             throw new Error("The parameter 'page' must be defined.");
@@ -231,7 +231,7 @@ export class TMDbApiListClient implements ITMDbApiListClient {
             observe: "response",
             responseType: "blob",			
             headers: new HttpHeaders({
-                "Accept": "application/json"
+                "Accept": "application/octet-stream"
             })
         };
 
@@ -242,33 +242,31 @@ export class TMDbApiListClient implements ITMDbApiListClient {
                 try {
                     return this.processGetListPageNum(<any>response_);
                 } catch (e) {
-                    return <Observable<MovieList>><any>_observableThrow(e);
+                    return <Observable<FileResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<MovieList>><any>_observableThrow(response_);
+                return <Observable<FileResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetListPageNum(response: HttpResponseBase): Observable<MovieList> {
+    protected processGetListPageNum(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = MovieList.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<MovieList>(<any>null);
+        return _observableOf<FileResponse>(<any>null);
     }
 }
 
@@ -388,490 +386,6 @@ export interface IAddMovieCommand {
     url?: string | undefined;
     photoUrl?: string | undefined;
     releasedYear?: number;
-}
-
-export class MovieInfo implements IMovieInfo {
-    adult?: boolean;
-    backdrop_path?: string | undefined;
-    belongs_to_collection?: any | undefined;
-    budget?: number;
-    genres?: Genres[] | undefined;
-    homepage?: string | undefined;
-    id?: number;
-    imdb_id?: string | undefined;
-    original_language?: string | undefined;
-    original_title?: string | undefined;
-    overview?: string | undefined;
-    popularity?: number;
-    poster_path?: string | undefined;
-    production_companies?: ProductionCompany[] | undefined;
-    production_countries?: ProductionCountry[] | undefined;
-    release_date?: string | undefined;
-    revenue?: number;
-    runtime?: number;
-    spoken_languages?: SpokenLanguage[] | undefined;
-    status?: string | undefined;
-    tagline?: string | undefined;
-    title?: string | undefined;
-    video?: boolean;
-    vote_average?: number;
-    vote_count?: number;
-
-    constructor(data?: IMovieInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.adult = _data["adult"];
-            this.backdrop_path = _data["backdrop_path"];
-            this.belongs_to_collection = _data["belongs_to_collection"];
-            this.budget = _data["budget"];
-            if (Array.isArray(_data["genres"])) {
-                this.genres = [] as any;
-                for (let item of _data["genres"])
-                    this.genres!.push(Genres.fromJS(item));
-            }
-            this.homepage = _data["homepage"];
-            this.id = _data["id"];
-            this.imdb_id = _data["imdb_id"];
-            this.original_language = _data["original_language"];
-            this.original_title = _data["original_title"];
-            this.overview = _data["overview"];
-            this.popularity = _data["popularity"];
-            this.poster_path = _data["poster_path"];
-            if (Array.isArray(_data["production_companies"])) {
-                this.production_companies = [] as any;
-                for (let item of _data["production_companies"])
-                    this.production_companies!.push(ProductionCompany.fromJS(item));
-            }
-            if (Array.isArray(_data["production_countries"])) {
-                this.production_countries = [] as any;
-                for (let item of _data["production_countries"])
-                    this.production_countries!.push(ProductionCountry.fromJS(item));
-            }
-            this.release_date = _data["release_date"];
-            this.revenue = _data["revenue"];
-            this.runtime = _data["runtime"];
-            if (Array.isArray(_data["spoken_languages"])) {
-                this.spoken_languages = [] as any;
-                for (let item of _data["spoken_languages"])
-                    this.spoken_languages!.push(SpokenLanguage.fromJS(item));
-            }
-            this.status = _data["status"];
-            this.tagline = _data["tagline"];
-            this.title = _data["title"];
-            this.video = _data["video"];
-            this.vote_average = _data["vote_average"];
-            this.vote_count = _data["vote_count"];
-        }
-    }
-
-    static fromJS(data: any): MovieInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new MovieInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["adult"] = this.adult;
-        data["backdrop_path"] = this.backdrop_path;
-        data["belongs_to_collection"] = this.belongs_to_collection;
-        data["budget"] = this.budget;
-        if (Array.isArray(this.genres)) {
-            data["genres"] = [];
-            for (let item of this.genres)
-                data["genres"].push(item.toJSON());
-        }
-        data["homepage"] = this.homepage;
-        data["id"] = this.id;
-        data["imdb_id"] = this.imdb_id;
-        data["original_language"] = this.original_language;
-        data["original_title"] = this.original_title;
-        data["overview"] = this.overview;
-        data["popularity"] = this.popularity;
-        data["poster_path"] = this.poster_path;
-        if (Array.isArray(this.production_companies)) {
-            data["production_companies"] = [];
-            for (let item of this.production_companies)
-                data["production_companies"].push(item.toJSON());
-        }
-        if (Array.isArray(this.production_countries)) {
-            data["production_countries"] = [];
-            for (let item of this.production_countries)
-                data["production_countries"].push(item.toJSON());
-        }
-        data["release_date"] = this.release_date;
-        data["revenue"] = this.revenue;
-        data["runtime"] = this.runtime;
-        if (Array.isArray(this.spoken_languages)) {
-            data["spoken_languages"] = [];
-            for (let item of this.spoken_languages)
-                data["spoken_languages"].push(item.toJSON());
-        }
-        data["status"] = this.status;
-        data["tagline"] = this.tagline;
-        data["title"] = this.title;
-        data["video"] = this.video;
-        data["vote_average"] = this.vote_average;
-        data["vote_count"] = this.vote_count;
-        return data; 
-    }
-}
-
-export interface IMovieInfo {
-    adult?: boolean;
-    backdrop_path?: string | undefined;
-    belongs_to_collection?: any | undefined;
-    budget?: number;
-    genres?: Genres[] | undefined;
-    homepage?: string | undefined;
-    id?: number;
-    imdb_id?: string | undefined;
-    original_language?: string | undefined;
-    original_title?: string | undefined;
-    overview?: string | undefined;
-    popularity?: number;
-    poster_path?: string | undefined;
-    production_companies?: ProductionCompany[] | undefined;
-    production_countries?: ProductionCountry[] | undefined;
-    release_date?: string | undefined;
-    revenue?: number;
-    runtime?: number;
-    spoken_languages?: SpokenLanguage[] | undefined;
-    status?: string | undefined;
-    tagline?: string | undefined;
-    title?: string | undefined;
-    video?: boolean;
-    vote_average?: number;
-    vote_count?: number;
-}
-
-export class Genres implements IGenres {
-    id?: number;
-    name?: string | undefined;
-
-    constructor(data?: IGenres) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): Genres {
-        data = typeof data === 'object' ? data : {};
-        let result = new Genres();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IGenres {
-    id?: number;
-    name?: string | undefined;
-}
-
-export class ProductionCompany implements IProductionCompany {
-    id?: number;
-    logo_path?: string | undefined;
-    name?: string | undefined;
-    origin_country?: string | undefined;
-
-    constructor(data?: IProductionCompany) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.logo_path = _data["logo_path"];
-            this.name = _data["name"];
-            this.origin_country = _data["origin_country"];
-        }
-    }
-
-    static fromJS(data: any): ProductionCompany {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProductionCompany();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["logo_path"] = this.logo_path;
-        data["name"] = this.name;
-        data["origin_country"] = this.origin_country;
-        return data; 
-    }
-}
-
-export interface IProductionCompany {
-    id?: number;
-    logo_path?: string | undefined;
-    name?: string | undefined;
-    origin_country?: string | undefined;
-}
-
-export class ProductionCountry implements IProductionCountry {
-    iso_3166_1?: string | undefined;
-    name?: string | undefined;
-
-    constructor(data?: IProductionCountry) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.iso_3166_1 = _data["iso_3166_1"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): ProductionCountry {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProductionCountry();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["iso_3166_1"] = this.iso_3166_1;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IProductionCountry {
-    iso_3166_1?: string | undefined;
-    name?: string | undefined;
-}
-
-export class SpokenLanguage implements ISpokenLanguage {
-    iso_639_1?: string | undefined;
-    name?: string | undefined;
-
-    constructor(data?: ISpokenLanguage) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.iso_639_1 = _data["iso_639_1"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): SpokenLanguage {
-        data = typeof data === 'object' ? data : {};
-        let result = new SpokenLanguage();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["iso_639_1"] = this.iso_639_1;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface ISpokenLanguage {
-    iso_639_1?: string | undefined;
-    name?: string | undefined;
-}
-
-export class MovieList implements IMovieList {
-    page?: number;
-    total_results?: number;
-    total_pages?: number;
-    results?: Result[] | undefined;
-
-    constructor(data?: IMovieList) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.page = _data["page"];
-            this.total_results = _data["total_results"];
-            this.total_pages = _data["total_pages"];
-            if (Array.isArray(_data["results"])) {
-                this.results = [] as any;
-                for (let item of _data["results"])
-                    this.results!.push(Result.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): MovieList {
-        data = typeof data === 'object' ? data : {};
-        let result = new MovieList();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["page"] = this.page;
-        data["total_results"] = this.total_results;
-        data["total_pages"] = this.total_pages;
-        if (Array.isArray(this.results)) {
-            data["results"] = [];
-            for (let item of this.results)
-                data["results"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IMovieList {
-    page?: number;
-    total_results?: number;
-    total_pages?: number;
-    results?: Result[] | undefined;
-}
-
-export class Result implements IResult {
-    popularity?: number;
-    vote_count?: number;
-    video?: boolean;
-    poster_path?: string | undefined;
-    id?: number;
-    adult?: boolean;
-    backdrop_path?: string | undefined;
-    original_language?: string | undefined;
-    original_title?: string | undefined;
-    genre_ids?: number[] | undefined;
-    title?: string | undefined;
-    vote_average?: number;
-    overview?: string | undefined;
-    release_date?: string | undefined;
-
-    constructor(data?: IResult) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.popularity = _data["popularity"];
-            this.vote_count = _data["vote_count"];
-            this.video = _data["video"];
-            this.poster_path = _data["poster_path"];
-            this.id = _data["id"];
-            this.adult = _data["adult"];
-            this.backdrop_path = _data["backdrop_path"];
-            this.original_language = _data["original_language"];
-            this.original_title = _data["original_title"];
-            if (Array.isArray(_data["genre_ids"])) {
-                this.genre_ids = [] as any;
-                for (let item of _data["genre_ids"])
-                    this.genre_ids!.push(item);
-            }
-            this.title = _data["title"];
-            this.vote_average = _data["vote_average"];
-            this.overview = _data["overview"];
-            this.release_date = _data["release_date"];
-        }
-    }
-
-    static fromJS(data: any): Result {
-        data = typeof data === 'object' ? data : {};
-        let result = new Result();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["popularity"] = this.popularity;
-        data["vote_count"] = this.vote_count;
-        data["video"] = this.video;
-        data["poster_path"] = this.poster_path;
-        data["id"] = this.id;
-        data["adult"] = this.adult;
-        data["backdrop_path"] = this.backdrop_path;
-        data["original_language"] = this.original_language;
-        data["original_title"] = this.original_title;
-        if (Array.isArray(this.genre_ids)) {
-            data["genre_ids"] = [];
-            for (let item of this.genre_ids)
-                data["genre_ids"].push(item);
-        }
-        data["title"] = this.title;
-        data["vote_average"] = this.vote_average;
-        data["overview"] = this.overview;
-        data["release_date"] = this.release_date;
-        return data; 
-    }
-}
-
-export interface IResult {
-    popularity?: number;
-    vote_count?: number;
-    video?: boolean;
-    poster_path?: string | undefined;
-    id?: number;
-    adult?: boolean;
-    backdrop_path?: string | undefined;
-    original_language?: string | undefined;
-    original_title?: string | undefined;
-    genre_ids?: number[] | undefined;
-    title?: string | undefined;
-    vote_average?: number;
-    overview?: string | undefined;
-    release_date?: string | undefined;
 }
 
 export class WeatherForecast implements IWeatherForecast {

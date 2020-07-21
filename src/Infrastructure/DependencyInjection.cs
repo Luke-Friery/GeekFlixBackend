@@ -1,8 +1,10 @@
-﻿using CleanArchiTemplate.Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
+using CleanArchiTemplate.Application.Common.Interfaces;
 //using CleanArchiTemplate.Infrastructure.Files;
 using CleanArchiTemplate.Infrastructure.Identity;
 using CleanArchiTemplate.Infrastructure.Persistence;
 using CleanArchiTemplate.Infrastructure.Services;
+using Infrastructure.TMDbConnection.Commands;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,25 +16,13 @@ namespace CleanArchiTemplate.Infrastructure
   {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-      if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-      {
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseInMemoryDatabase("CleanArchiTemplateDb"));
-      }
-      else
-      {
-        services.AddDbContext<ApplicationDbContext>(options =>
-          options.UseNpgsql(
-            configuration.GetConnectionString("DefaultConnection"),
-              b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
-      }
 
+      //PostgreSQL Database
 
-
-
-
-
-
+      services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(
+          configuration.GetConnectionString("DefaultConnection"),
+            b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
 
 

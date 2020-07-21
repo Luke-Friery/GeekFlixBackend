@@ -1,9 +1,11 @@
+using Application.Common.Interfaces;
 using CleanArchiTemplate.Application;
 using CleanArchiTemplate.Application.Common.Interfaces;
 using CleanArchiTemplate.Infrastructure;
 using CleanArchiTemplate.Infrastructure.Persistence;
 using CleanArchiTemplate.WebUI.Filters;
 using CleanArchiTemplate.WebUI.Services;
+using Infrastructure.TMDbConnection.Commands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +35,7 @@ namespace CleanArchiTemplate.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            
 
             services.AddHttpContextAccessor();
 

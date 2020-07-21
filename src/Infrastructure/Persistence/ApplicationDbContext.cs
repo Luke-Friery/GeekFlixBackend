@@ -31,10 +31,6 @@ namespace CleanArchiTemplate.Infrastructure.Persistence
       _dateTime = dateTime;
     }
 
-
-
-
-    public DbSet<Movie> Movies { get; set; } //needs to be in cache
     //public DbSet<PopularityData> PopData { get; set; } //needs to be in cache
 
     //public DbSet<AnalyticData> Analytics { get; set; } //needs to be in db

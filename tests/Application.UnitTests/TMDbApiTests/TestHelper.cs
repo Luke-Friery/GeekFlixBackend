@@ -9,14 +9,12 @@ using NUnit.Framework;
 
 namespace Applicaton.IntegrationTests.TMDbApiTests
 {
-
-  using static Testing;
-
   public class TestHelper
   {
     [Test]
     public void TestGetText()
     {
+      // arrange
       var path = System.IO.Directory.GetCurrentDirectory();
       string text = System.IO.File.ReadAllText(Path.Combine(path, @"../../../TMDbApiTests/MovieResults1.json"));
       //TestContext.Out.WriteLine("******LOOK HERE******: \n" + text);
@@ -24,11 +22,13 @@ namespace Applicaton.IntegrationTests.TMDbApiTests
       string apiKey = "f68c64ab26f5bb2a81e09f4af4dff582";
       HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=878") as HttpWebRequest;
 
+      // act
       string apiResponse = DoWebRequest(apiRequest);
 
+      // assert
       var fromjsonfile = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieList>(text);
       var fromwebrequest = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieList>(apiResponse);
-      
+
       Assert.NotNull(fromwebrequest.results);
       Assert.NotNull(fromwebrequest);
       Assert.IsInstanceOf(typeof(MovieList), fromwebrequest);
@@ -39,11 +39,16 @@ namespace Applicaton.IntegrationTests.TMDbApiTests
       Assert.IsInstanceOf(typeof(MovieList), fromjsonfile);
       Assert.IsInstanceOf(typeof(List<Result>), fromjsonfile.results);
       //how do I properly compare the json and webrequest objects? (e.g. make sure each field is correctly filled)
-      
+
     }
 
+    
 
 
+    //TODO
+    //mock httpwebrequest to return json file
+    //test that the deserialisation actually works to the correct file types
+    //change everything to use fluentassertions
 
 
 

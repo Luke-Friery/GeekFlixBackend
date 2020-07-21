@@ -21,100 +21,100 @@ namespace CleanArchiTemplate.Infrastructure.Persistence
 
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
-            //Seed, if necessary
-            if (!context.Movies.Any())
-            {
-                Random r = new Random();
+        //     //Seed, if necessary
+        //     if (!context.Movies.Any())
+        //     {
+        //         Random r = new Random();
 
-                string temp = "Batman";
-                int pop = r.Next(0,100);
-                int rat = r.Next(0,10);
+        //         string temp = "Batman";
+        //         int pop = r.Next(0,100);
+        //         int rat = r.Next(0,10);
 
-                context.Movies.Add(new Movie
-                {
-                    Title = temp,
-                    Url = temp + ".com",
-                    Content = temp + ".content",
-                    Popularity = pop,
-                    Emotion = temp + ".emotion",
-                    Rating = rat
-                });
+        //         context.Movies.Add(new Movie
+        //         {
+        //             Title = temp,
+        //             Url = temp + ".com",
+        //             Content = temp + ".content",
+        //             Popularity = pop,
+        //             Emotion = temp + ".emotion",
+        //             Rating = rat
+        //         });
 
-                temp = "Robin";
-                pop = r.Next(0,100);
-                rat = r.Next(0,10);
+        //         temp = "Robin";
+        //         pop = r.Next(0,100);
+        //         rat = r.Next(0,10);
 
-                context.Movies.Add(new Movie
-                {
-                    Title = temp,
-                    Url = temp + ".com",
-                    Content = temp + ".content",
-                    Popularity = pop,
-                    Emotion = temp + ".emotion",
-                    Rating = rat
-                });
+        //         context.Movies.Add(new Movie
+        //         {
+        //             Title = temp,
+        //             Url = temp + ".com",
+        //             Content = temp + ".content",
+        //             Popularity = pop,
+        //             Emotion = temp + ".emotion",
+        //             Rating = rat
+        //         });
 
-                temp = "IceCube";
-                pop = r.Next(0,100);
-                rat = r.Next(0,10);
+        //         temp = "IceCube";
+        //         pop = r.Next(0,100);
+        //         rat = r.Next(0,10);
 
-                context.Movies.Add(new Movie
-                {
-                    Title = temp,
-                    Url = temp + ".com",
-                    Content = temp + ".content",
-                    Popularity = pop,
-                    Emotion = temp + ".emotion",
-                    Rating = rat
-                });
+        //         context.Movies.Add(new Movie
+        //         {
+        //             Title = temp,
+        //             Url = temp + ".com",
+        //             Content = temp + ".content",
+        //             Popularity = pop,
+        //             Emotion = temp + ".emotion",
+        //             Rating = rat
+        //         });
 
-                temp = "Joker";
-                pop = r.Next(0,100);
-                rat = r.Next(0,10);
+        //         temp = "Joker";
+        //         pop = r.Next(0,100);
+        //         rat = r.Next(0,10);
 
-                context.Movies.Add(new Movie
-                {
-                    Title = temp,
-                    Url = temp + ".com",
-                    Content = temp + ".content",
-                    Popularity = pop,
-                    Emotion = temp + ".emotion",
-                    Rating = rat
-                });
+        //         context.Movies.Add(new Movie
+        //         {
+        //             Title = temp,
+        //             Url = temp + ".com",
+        //             Content = temp + ".content",
+        //             Popularity = pop,
+        //             Emotion = temp + ".emotion",
+        //             Rating = rat
+        //         });
 
-                temp = "CatWoman";
-                pop = r.Next(0,100);
-                rat = r.Next(0,10);
+        //         temp = "CatWoman";
+        //         pop = r.Next(0,100);
+        //         rat = r.Next(0,10);
 
-                context.Movies.Add(new Movie
-                {
-                    Title = temp,
-                    Url = temp + ".com",
-                    Content = temp + ".content",
-                    Popularity = pop,
-                    Emotion = temp + ".emotion",
-                    Rating = rat
-                });
+        //         context.Movies.Add(new Movie
+        //         {
+        //             Title = temp,
+        //             Url = temp + ".com",
+        //             Content = temp + ".content",
+        //             Popularity = pop,
+        //             Emotion = temp + ".emotion",
+        //             Rating = rat
+        //         });
 
-                temp = "Dark Knight";
-                pop = r.Next(0,100);
-                rat = r.Next(0,10);
+        //         temp = "Dark Knight";
+        //         pop = r.Next(0,100);
+        //         rat = r.Next(0,10);
 
-                context.Movies.Add(new Movie
-                {
-                    Title = temp,
-                    Url = temp + ".com",
-                    Content = temp + ".content",
-                    Popularity = pop,
-                    Emotion = temp + ".emotion",
-                    Rating = rat
-                });
-
-
+        //         context.Movies.Add(new Movie
+        //         {
+        //             Title = temp,
+        //             Url = temp + ".com",
+        //             Content = temp + ".content",
+        //             Popularity = pop,
+        //             Emotion = temp + ".emotion",
+        //             Rating = rat
+        //         });
 
 
-                 await context.SaveChangesAsync();
-            }
+
+
+                  await context.SaveChangesAsync();
+        //    }
         }
     }
 }
