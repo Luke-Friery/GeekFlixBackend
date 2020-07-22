@@ -17,7 +17,7 @@ namespace Infrastructure.TMDbConnection.Commands
       return movieListings;
     }
 
-    private static string DoWebRequest(HttpWebRequest apiRequest)
+    public string DoWebRequest(HttpWebRequest apiRequest)
     {
       string apiResponse;
       using (HttpWebResponse response = apiRequest.GetResponse() as HttpWebResponse)

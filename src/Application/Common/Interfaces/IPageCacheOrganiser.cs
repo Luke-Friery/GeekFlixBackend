@@ -4,12 +4,13 @@ namespace Application.Common.Interfaces
 {
   public interface IPageCacheOrganiser
   {
+    string CacheGetSerializedPage(int page);
     MovieListCache CacheGetPage(int page);
-    bool CachePageExistsYesNo(int page);
-    void CacheAddPage(int id, PageCache pageCache);
-    bool CacheRemovePage();
-    void PrunePageCache(int size);
+    MovieListCache MapToListCache(MovieList parser);
+    void CacheAddPage(MovieListCache movieListCached);
+    void PrunePageCache();
     void PrunePageTimer();
-    void SetPageCacheLimits();
+    void SetPageCacheLimits(int min, int max, int minutes);
+    MovieListCache ReturnCacheEntry(int page);
   }
 }

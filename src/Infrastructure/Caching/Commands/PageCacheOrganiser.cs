@@ -7,21 +7,28 @@ using System.Linq;
 
 namespace Infrastructure.Caching.Commands
 {
-  public class PageCacheOrganiser
+  public class PageCacheOrganiser : IPageCacheOrganiser
   {
-    Dictionary<int, MovieListCache> _cache = new Dictionary<int, MovieListCache>();
+    static Dictionary<int, MovieListCache> _cache = new Dictionary<int, MovieListCache>();
     private readonly ITMDbListService _listService;
 
-    private int PruneMaxLimit { get; set; }
-    private int PruneMinLimit { get; set; }
-    private int PruneTimeMins { get; set; }
+    private int PrunePageMaxLimit { get; set; }
+    private int PrunePageMinLimit { get; set; }
+    private int PrunePageTimeMins { get; set; }
 
-    public PageCacheOrganiser(ITMDbListService listService, int max = 50, int min = 10, int time = 15)
+    public PageCacheOrganiser(ITMDbListService listService)
     {
       _listService = listService;
-      PruneMaxLimit = max;
-      PruneMinLimit = min;
-      PruneTimeMins = time;
+      PrunePageMaxLimit = 10;
+      PrunePageMinLimit = 4;
+      PrunePageTimeMins = 15;
+    }
+
+    public string CacheGetSerializedPage(int page)
+    {
+      MovieListCache reqPageObj = CacheGetPage(page);
+      string reqPageString = Newtonsoft.Json.JsonConvert.SerializeObject(reqPageObj);
+      return reqPageString;
     }
 
     public MovieListCache CacheGetPage(int page)
@@ -33,7 +40,7 @@ namespace Infrastructure.Caching.Commands
       }
       else
       {
-        MovieList parser = _listService.TMDbGetPage(page);
+        MovieList parser = _listService.TMDbGetPage(page); // THIS IS WHERE IT FAILS (First Pass). How do I fix the moq?
         MovieListCache movieListCached = MapToListCache(parser);
         CacheAddPage(movieListCached);
         return movieListCached;
@@ -53,7 +60,7 @@ namespace Infrastructure.Caching.Commands
 
     public void CacheAddPage(MovieListCache movieListCached)
     {
-      if (_cache.Count >= PruneMaxLimit)
+      if (_cache.Count >= PrunePageMaxLimit)
       {
         PrunePageCache();
       }
@@ -62,34 +69,38 @@ namespace Infrastructure.Caching.Commands
 
     public void PrunePageCache()
     {
-      if (PruneMinLimit > 0 && PruneMinLimit < PruneMaxLimit)
+      var items = _cache.OrderByDescending(i => i.Value.references).Skip(PrunePageMinLimit);
+      foreach (var item in items)
       {
-        var items = _cache.OrderByDescending(i => i.Value.references);
-        int i = 0;
-        foreach (var item in items)
-        {
-          if (i > PruneMinLimit)
-          {
-            _cache.Remove(item.Key);
-          }
-          i++;
-        }
+        _cache.Remove(item.Key);
       }
     }
 
     public void PrunePageTimer()
     {
-
+      //TODO
     }
 
-    public void SetPageCacheLimits()
+    public void SetPageCacheLimits(int min, int max, int minutes)
     {
+      if (min > 0 && max > min)
+      {
+        PrunePageMinLimit = min;
+        PrunePageMaxLimit = max;
+      }
 
+      if(minutes > 1)
+        PrunePageTimeMins = minutes;
     }
 
     public MovieListCache ReturnCacheEntry(int page)
     {
       return _cache[page];
+    }
+
+    public int ReturnCacheCurrentSize()
+    {
+      return _cache.Count();
     }
   }
 }

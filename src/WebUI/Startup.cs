@@ -5,6 +5,7 @@ using CleanArchiTemplate.Infrastructure;
 using CleanArchiTemplate.Infrastructure.Persistence;
 using CleanArchiTemplate.WebUI.Filters;
 using CleanArchiTemplate.WebUI.Services;
+using Infrastructure.Caching.Commands;
 using Infrastructure.TMDbConnection.Commands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace CleanArchiTemplate.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            //services.AddScoped<IPageCacheOrganiser, PageCacheOrganiser>();
             
 
             services.AddHttpContextAccessor();

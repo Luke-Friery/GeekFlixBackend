@@ -1,9 +1,9 @@
 ﻿using Application.Common.Interfaces;
 using CleanArchiTemplate.Application.Common.Interfaces;
-//using CleanArchiTemplate.Infrastructure.Files;
 using CleanArchiTemplate.Infrastructure.Identity;
 using CleanArchiTemplate.Infrastructure.Persistence;
 using CleanArchiTemplate.Infrastructure.Services;
+using Infrastructure.Caching.Commands;
 using Infrastructure.TMDbConnection.Commands;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +24,7 @@ namespace CleanArchiTemplate.Infrastructure
           configuration.GetConnectionString("DefaultConnection"),
             b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-
+      
 
       services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
@@ -37,6 +37,9 @@ namespace CleanArchiTemplate.Infrastructure
       services.AddTransient<IDateTime, DateTimeService>();
       services.AddTransient<IIdentityService, IdentityService>();
       //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+      services.AddScoped<ITMDbListService, TMDbListService>();
+      services.AddScoped<IPageCacheOrganiser, PageCacheOrganiser>();
+
 
       services.AddAuthentication()
           .AddIdentityServerJwt();

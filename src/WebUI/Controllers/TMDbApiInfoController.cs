@@ -11,13 +11,13 @@ namespace WebUI.Controllers
     [HttpGet("{movieId}")]
     public string GetListPageNum(int movieId)
     {
-    //if cache exists
+      //if cache exists
       //use cached data
 
-    //if cache doesn't exist
+      //if cache doesn't exist
       //get from TMDb
       string apiKey = "f68c64ab26f5bb2a81e09f4af4dff582";
-      HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/movie/"+movieId+"?api_key=" +apiKey+ "&language=en-US") as HttpWebRequest;
+      HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey + "&language=en-US") as HttpWebRequest;
       string apiResponse = DoWebRequest(apiRequest);
       var movieInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieInfo>(apiResponse);
       //insert functions to alter movieListings here (e.g. add emotions)

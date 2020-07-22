@@ -6,6 +6,91 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/MoviePage/{pageId}": {
+      "get": {
+        "tags": [
+          "MoviePage"
+        ],
+        "operationId": "MoviePage_PassThroughMoviePage",
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MoviePage/SetMinMax&Time/{min}/{max}/{mins}": {
+      "post": {
+        "tags": [
+          "MoviePage"
+        ],
+        "operationId": "MoviePage_SetCacheLimits",
+        "parameters": [
+          {
+            "name": "min",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "max",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "mins",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TMDbApiInfo/{movieId}": {
       "get": {
         "tags": [
