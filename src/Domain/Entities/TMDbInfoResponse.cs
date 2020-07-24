@@ -2,6 +2,15 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
+
+  public class BelongsToCollection
+  {
+    public int id { get; set; }
+    public string name { get; set; }
+    public string poster_path { get; set; }
+    public string backdrop_path { get; set; }
+
+  }
   public class Genres
   {
     public int id { get; set; }
@@ -36,7 +45,7 @@ namespace Domain.Entities
   {
     public bool adult { get; set; }
     public string backdrop_path { get; set; }
-    public object belongs_to_collection { get; set; }
+    public BelongsToCollection belongs_to_collection { get; set; }
     public int budget { get; set; }
     public List<Genres> genres { get; set; }
     public string homepage { get; set; }

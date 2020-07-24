@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using CleanArchiTemplate.WebUI.Controllers;
+using Domain.Entities;
 using Infrastructure.Caching.Commands;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +15,16 @@ namespace WebUI.Controllers
       _cache = cache;
     }
 
-    [HttpGet("{pageId}")]
-    public string PassThroughMoviePage(int pageId)
+    [HttpGet("string/{pageId}")]
+    public string PassThroughSerializedMoviePage(int pageId)
     {
-      int i = 1;
-      i = i++;
       return _cache.CacheGetSerializedPage(pageId);
+    }
+
+    [HttpGet("{pageId}")]
+    public MovieListCache PassThroughMoviePage(int pageId)
+    {
+      return _cache.CacheGetPage(pageId);
     }
 
     [HttpPost("SetMinMax&Time/{min}/{max}/{mins}")]

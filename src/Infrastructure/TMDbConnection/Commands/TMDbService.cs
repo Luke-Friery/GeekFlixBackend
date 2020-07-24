@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Infrastructure.TMDbConnection.Commands
 {
-  public class TMDbListService : ITMDbListService
+  public class TMDbService : ITMDbService
   {
     public MovieList TMDbGetPage(int page)
     {
@@ -15,6 +15,15 @@ namespace Infrastructure.TMDbConnection.Commands
       string apiResponse = DoWebRequest(apiRequest);
       var movieListings = JsonConvert.DeserializeObject<MovieList>(apiResponse);
       return movieListings;
+    }
+
+    public MovieInfo TMDbGetInfo(int id)
+    {
+      string apiKey = "f68c64ab26f5bb2a81e09f4af4dff582";
+      HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/movie/" + id + "?api_key=" + apiKey + "&language=en-US") as HttpWebRequest;
+      string apiResponse = DoWebRequest(apiRequest);
+      var movieInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieInfo>(apiResponse);
+      return movieInfo;
     }
 
     public string DoWebRequest(HttpWebRequest apiRequest)

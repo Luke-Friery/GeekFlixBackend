@@ -6,6 +6,188 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/MovieInfo/string/{infoId}": {
+      "get": {
+        "tags": [
+          "MovieInfo"
+        ],
+        "operationId": "MovieInfo_PassThroughStringMovieInfo",
+        "parameters": [
+          {
+            "name": "infoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MovieInfo/{infoId}": {
+      "get": {
+        "tags": [
+          "MovieInfo"
+        ],
+        "operationId": "MovieInfo_PassThroughMovieInfo",
+        "parameters": [
+          {
+            "name": "infoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MovieInfo/SetInfoCacheMinMax&Time/{min}/{max}/{mins}": {
+      "post": {
+        "tags": [
+          "MovieInfo"
+        ],
+        "operationId": "MovieInfo_SetInfoCacheLimits",
+        "parameters": [
+          {
+            "name": "min",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "max",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "mins",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MovieInfo/ClearCache": {
+      "get": {
+        "tags": [
+          "MovieInfo"
+        ],
+        "operationId": "MovieInfo_ClearCache",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/MovieInfo/GetCache": {
+      "get": {
+        "tags": [
+          "MovieInfo"
+        ],
+        "operationId": "MovieInfo_GetCache",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MoviePage/string/{pageId}": {
+      "get": {
+        "tags": [
+          "MoviePage"
+        ],
+        "operationId": "MoviePage_PassThroughSerializedMoviePage",
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/MoviePage/{pageId}": {
       "get": {
         "tags": [
@@ -30,7 +212,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/MovieListCache"
                 }
               }
             }
@@ -91,71 +273,6 @@
         }
       }
     },
-    "/api/TMDbApiInfo/{movieId}": {
-      "get": {
-        "tags": [
-          "TMDbApiInfo"
-        ],
-        "operationId": "TMDbApiInfo_GetListPageNum",
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/TMDbApiList/{page}": {
-      "get": {
-        "tags": [
-          "TMDbApiList"
-        ],
-        "operationId": "TMDbApiList_GetListPageNum",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/WeatherForecast": {
       "get": {
         "tags": [
@@ -182,6 +299,305 @@
   },
   "components": {
     "schemas": {
+      "MovieInfo": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "adult": {
+            "type": "boolean"
+          },
+          "backdrop_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "belongs_to_collection": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BelongsToCollection"
+              }
+            ]
+          },
+          "budget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "genres": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Genres"
+            }
+          },
+          "homepage": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imdb_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "original_language": {
+            "type": "string",
+            "nullable": true
+          },
+          "original_title": {
+            "type": "string",
+            "nullable": true
+          },
+          "overview": {
+            "type": "string",
+            "nullable": true
+          },
+          "popularity": {
+            "type": "number",
+            "format": "double"
+          },
+          "poster_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "production_companies": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProductionCompany"
+            }
+          },
+          "production_countries": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProductionCountry"
+            }
+          },
+          "release_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "revenue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "runtime": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spoken_languages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SpokenLanguage"
+            }
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "tagline": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "video": {
+            "type": "boolean"
+          },
+          "vote_average": {
+            "type": "number",
+            "format": "double"
+          },
+          "vote_count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "BelongsToCollection": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "poster_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "backdrop_path": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Genres": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ProductionCompany": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "logo_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "origin_country": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ProductionCountry": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "iso_3166_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SpokenLanguage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "iso_639_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MovieListCache": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "references": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_results": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Result"
+            }
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "popularity": {
+            "type": "number",
+            "format": "double"
+          },
+          "vote_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "video": {
+            "type": "boolean"
+          },
+          "poster_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adult": {
+            "type": "boolean"
+          },
+          "backdrop_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "original_language": {
+            "type": "string",
+            "nullable": true
+          },
+          "original_title": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "vote_average": {
+            "type": "number",
+            "format": "double"
+          },
+          "overview": {
+            "type": "string",
+            "nullable": true
+          },
+          "release_date": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "WeatherForecast": {
         "type": "object",
         "additionalProperties": false,

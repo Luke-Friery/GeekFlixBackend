@@ -11,7 +11,7 @@ using System;
 namespace Application.UnitTests.TMDbApiTests
 {
 
-  public class PageCacheOrganiserTest
+  public class PageCacheOrganiserTests
   {
     [Test]
     public void TestCache_MappingMovieListToMovieListCache_ReturnsAMovieListCacheElement()
@@ -47,10 +47,10 @@ namespace Application.UnitTests.TMDbApiTests
       MovieListCache cachedData = organiser.ReturnCacheEntry(1);
       //assert
       cachedData.Should().NotBeNull();
-      cachedData.page.Should().Equals(1);
-      cachedData.references.Should().Equals(2);
-      cachedData.total_results.Should().Equals(fromjsonfile.total_results);
-      cachedData.total_pages.Should().Equals(fromjsonfile.total_pages);
+      cachedData.page.Should().Be(1);
+      cachedData.references.Should().Be(1);
+      cachedData.total_results.Should().Be(fromjsonfile.total_results);
+      cachedData.total_pages.Should().Be(fromjsonfile.total_pages);
       cachedData.results.Should().NotBeNull();
     }
 
@@ -66,24 +66,22 @@ namespace Application.UnitTests.TMDbApiTests
       var serviceMock = CreateServiceMockForGetPage(fromjsonfile);
       var organiser = new PageCacheOrganiser(serviceMock.Object);
       //act 
-      MovieListCache samplejson = organiser.CacheGetPage(expectedId); //no data in cache, should get from moq
-      MovieListCache cachedData = organiser.CacheGetPage(expectedId); //data in cache, should get from cache
+      MovieListCache cachedData = organiser.CacheGetPage(expectedId); //no data in cache, should get from moq
+      cachedData = organiser.CacheGetPage(expectedId); //data in cache, should get from cache
       //assert
-      samplejson.references.Should().Equals(1); //first time grabbed
-      samplejson.results.Should().NotBeNull();
       cachedData.Should().NotBeNull();
-      cachedData.page.Should().Equals(1);
-      cachedData.references.Should().Equals(2); //if this is 2 indicates it successfully grabbed from cache
-      cachedData.total_results.Should().Equals(fromjsonfile.total_results);
-      cachedData.total_pages.Should().Equals(fromjsonfile.total_pages);
+      cachedData.page.Should().Be(1);
+      cachedData.references.Should().Be(2); //if this is 2 indicates it successfully grabbed from cache
+      cachedData.total_results.Should().Be(fromjsonfile.total_results);
+      cachedData.total_pages.Should().Be(fromjsonfile.total_pages);
       cachedData.results.Should().NotBeNull();
       //how to do this?
       //cachedData.results.Should().BeOfType(List<Result>)
     }
 
-    private static Mock<ITMDbListService> CreateServiceMockForGetPage(MovieList fromjsonfile)
+    private static Mock<ITMDbService> CreateServiceMockForGetPage(MovieList fromjsonfile)
     {
-      var serviceMock = new Mock<ITMDbListService>();
+      var serviceMock = new Mock<ITMDbService>();
       serviceMock.Setup(m => m.TMDbGetPage(It.IsAny<int>())).Returns(fromjsonfile);
       return serviceMock;
     }
@@ -105,13 +103,14 @@ namespace Application.UnitTests.TMDbApiTests
       MovieListCache cachedData4 = organiser.CacheGetPage(4);
       MovieListCache cachedData5 = organiser.CacheGetPage(5);
       MovieListCache cachedData6 = organiser.CacheGetPage(6);
-      int itemsInCache = organiser.ReturnCacheCurrentSize();
+      int itemsInCache = organiser.ReturnPageCacheCurrentSize();
       //assert
-      itemsInCache.Should().Equals(4);
+      itemsInCache.Should().Be(4);
     }
 
-    private static Mock<ITMDbListService> CreateServiceMockForMultipleGetPage(MovieList fromjsonfile)
+    private static Mock<ITMDbService> CreateServiceMockForMultipleGetPage(MovieList fromjsonfile)
     {
+      fromjsonfile = CopyMapFromJsonFile(fromjsonfile, fromjsonfile, 1);
       MovieList fromjsonfile2 = new MovieList();
       fromjsonfile2 = CopyMapFromJsonFile(fromjsonfile, fromjsonfile2, 2);
       MovieList fromjsonfile3 = new MovieList();
@@ -123,7 +122,7 @@ namespace Application.UnitTests.TMDbApiTests
       MovieList fromjsonfile6 = new MovieList();
       fromjsonfile6 = CopyMapFromJsonFile(fromjsonfile, fromjsonfile6, 6);
       Queue<MovieList> resultque = new Queue<MovieList>(new MovieList[] { fromjsonfile, fromjsonfile2, fromjsonfile3, fromjsonfile4, fromjsonfile5, fromjsonfile6 });
-      var serviceMock = new Mock<ITMDbListService>();
+      var serviceMock = new Mock<ITMDbService>();
       serviceMock.Setup(m => m.TMDbGetPage(It.IsAny<int>())).Returns(() => resultque.Dequeue());
       return serviceMock;
     }
@@ -167,6 +166,17 @@ namespace Application.UnitTests.TMDbApiTests
       entry4.Should().Throw<KeyNotFoundException>();
       shouldexist.Should().NotBeNull();
       shouldexist2.Should().NotBeNull();
+    }
+  }
+
+[SetUpFixture]
+  public class PageCacheOrganiserTestsSetup
+  {
+    [SetUp]
+    public void GlobalSetup()
+    {
+      var organiser = new PageCacheOrganiser(null);
+      organiser.ClearCache();
     }
   }
 }

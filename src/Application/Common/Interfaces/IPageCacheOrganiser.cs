@@ -12,5 +12,7 @@ namespace Application.Common.Interfaces
     void PrunePageTimer();
     void SetPageCacheLimits(int min, int max, int minutes);
     MovieListCache ReturnCacheEntry(int page);
+    int ReturnPageCacheCurrentSize();
+    void ClearCache();
   }
 }

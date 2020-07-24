@@ -37,9 +37,9 @@ namespace CleanArchiTemplate.Infrastructure
       services.AddTransient<IDateTime, DateTimeService>();
       services.AddTransient<IIdentityService, IdentityService>();
       //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
-      services.AddScoped<ITMDbListService, TMDbListService>();
+      services.AddScoped<ITMDbService, TMDbService>();
       services.AddScoped<IPageCacheOrganiser, PageCacheOrganiser>();
-
+      services.AddScoped<IInfoCacheOrganiser, InfoCacheOrganiser>();
 
       services.AddAuthentication()
           .AddIdentityServerJwt();

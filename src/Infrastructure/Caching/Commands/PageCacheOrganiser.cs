@@ -10,13 +10,13 @@ namespace Infrastructure.Caching.Commands
   public class PageCacheOrganiser : IPageCacheOrganiser
   {
     static Dictionary<int, MovieListCache> _cache = new Dictionary<int, MovieListCache>();
-    private readonly ITMDbListService _listService;
+    private readonly ITMDbService _listService;
 
     private int PrunePageMaxLimit { get; set; }
     private int PrunePageMinLimit { get; set; }
     private int PrunePageTimeMins { get; set; }
 
-    public PageCacheOrganiser(ITMDbListService listService)
+    public PageCacheOrganiser(ITMDbService listService)
     {
       _listService = listService;
       PrunePageMaxLimit = 10;
@@ -89,7 +89,7 @@ namespace Infrastructure.Caching.Commands
         PrunePageMaxLimit = max;
       }
 
-      if(minutes > 1)
+      if (minutes > 1)
         PrunePageTimeMins = minutes;
     }
 
@@ -98,9 +98,14 @@ namespace Infrastructure.Caching.Commands
       return _cache[page];
     }
 
-    public int ReturnCacheCurrentSize()
+    public int ReturnPageCacheCurrentSize()
     {
       return _cache.Count();
+    }
+
+    public void ClearCache()
+    {
+      _cache.Clear();
     }
   }
 }
